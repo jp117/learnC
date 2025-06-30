@@ -78,6 +78,41 @@ void delete_task(task_t **head, int index){
 
 }
 
+void save_task(task_t *head){
+    FILE *file = fopen("tasks.txt", "w");
+    if (!file){
+        perror("Failed to open file");
+        return;
+    }
+
+    task_t *current = head;
+    while (current != NULL){
+        fprintf(file, "%s\n", current -> task);
+        current = current -> next;
+    }
+
+    fclose(file);
+}
+
+void load_tasks(task_t **head){
+    FILE *file = fopen("tasks.txt", "r");
+    if (!file){
+        return;
+    }
+
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    while ((read = getline(&line, &len, file)) != -1){
+        if (line[read - 1] == '\n') line[read - 1] = '\0';
+        add_task(head, line);
+    }
+
+    free(line);
+    fclose(file);
+}
+
 int main() {
     char input[MAX_INPUT];
     task_t *head = NULL;
@@ -110,8 +145,7 @@ int main() {
             printf("Unknown command.\n");
         }
 
-    }
-    
+    }   
 
     return 0;
 }
