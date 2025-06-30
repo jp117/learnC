@@ -113,6 +113,8 @@ void load_tasks(task_t **head){
     fclose(file);
 }
 
+// TODO: Delete tasks
+
 int main() {
     char input[MAX_INPUT];
     task_t *head = NULL;
