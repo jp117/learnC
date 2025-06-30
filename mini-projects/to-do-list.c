@@ -119,6 +119,7 @@ int main() {
 
     printf("Welcome to your To-Do List\n");
     printf("Commands: add [task], list, delete [id], quit\n");
+    load_tasks(&head);
 
     while (1)
     {
@@ -131,6 +132,7 @@ int main() {
             printf("Adding task: %s\n", input + 4);
             char *task_text = input + 4;
             add_task(&head, task_text);
+            save_task(head);
         } else if (strcmp(input, "list") == 0) {
             printf("Listing tasks...\n");
             list_tasks(head);
