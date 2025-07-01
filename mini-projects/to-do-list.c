@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #define MAX_INPUT 100
 
@@ -8,6 +9,8 @@ typedef struct task {
     char *task;
     struct task *next;
 } task_t;
+
+task_t *global_head = NULL;
 
 void add_task(task_t **head, const char *task_str) {
    task_t *new_node = malloc(sizeof(task_t));
@@ -113,9 +116,25 @@ void load_tasks(task_t **head){
     fclose(file);
 }
 
-// TODO: Delete tasks
+void free_tasks(task_t *head){
+    task_t *current = head;
+    while (current != NULL){
+        task_t *next = current->next;
+        free(current->task);
+        free(current);
+        current = next;
+    }
+}
+
+void handle_sigint(int sig) {
+    printf("\nCaught Ctrl+C! Cleaning up...\n");
+    free_tasks(global_head);
+    exit(0);
+}
 
 int main() {
+    signal(SIGINT, handle_sigint);
+    
     char input[MAX_INPUT];
     task_t *head = NULL;
 
@@ -145,6 +164,7 @@ int main() {
             save_task(head);
         } else if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
             printf("Goodbye!\n");
+            free_tasks(head);
             break;
         } else {
             printf("Unknown command.\n");
