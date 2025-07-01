@@ -132,15 +132,20 @@ void handle_sigint(int sig) {
     exit(0);
 }
 
+void update_global_head(task_t *head){
+    global_head = head;
+}
+
 int main() {
     signal(SIGINT, handle_sigint);
-    
+
     char input[MAX_INPUT];
     task_t *head = NULL;
 
     printf("Welcome to your To-Do List\n");
     printf("Commands: add [task], list, delete [id], quit\n");
     load_tasks(&head);
+    update_global_head(head);
 
     while (1)
     {
@@ -154,6 +159,7 @@ int main() {
             char *task_text = input + 4;
             add_task(&head, task_text);
             save_task(head);
+            update_global_head(head);
         } else if (strcmp(input, "list") == 0) {
             printf("Listing tasks...\n");
             list_tasks(head);
@@ -162,6 +168,7 @@ int main() {
             int delete_task_index = atoi(input + 7);
             delete_task(&head, delete_task_index);
             save_task(head);
+            update_global_head(head);
         } else if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
             printf("Goodbye!\n");
             free_tasks(head);
