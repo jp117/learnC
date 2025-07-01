@@ -142,6 +142,7 @@ int main() {
             printf("Deleting task ID: %s\n", input + 7);
             int delete_task_index = atoi(input + 7);
             delete_task(&head, delete_task_index);
+            save_task(head);
         } else if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
             printf("Goodbye!\n");
             break;
